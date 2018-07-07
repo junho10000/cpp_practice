@@ -6,8 +6,34 @@
 #include "sString.h"
 #include "CSVLib.h"
 
+int CalcParagraphCount(FILE* fp)
+{
+	char buffer[1024];
+	char* record = fgets(buffer, sizeof(buffer), fp);
 
-inline void ParsingCSV(const char* text, sParagraphList* paragraphList)
+	int prevNo = -1;
+	int count = 0;
+	while (1)
+	{
+		record = fgets(buffer, sizeof(buffer), fp);
+		if (NULL == record)
+			break;
+
+		char* token = strtok(record, ",");	// 문단 번호
+		int pNo = atoi(token);
+		if (pNo != prevNo)
+		{
+			prevNo = pNo;
+			count++;
+		}
+	}
+
+	fseek(fp, 0, SEEK_SET);
+
+	return count;
+}
+
+void ParsingCSV(const char* text, sParagraphList* paragraphList)
 {
 	// 스크립트 사용
 	// 1. 파일은 연다. - 파일에 있는 내용을 읽을 준비를 한다.
@@ -18,9 +44,9 @@ inline void ParsingCSV(const char* text, sParagraphList* paragraphList)
 		return;
 	}
 
-	paragraphList->count = CalcParagraphCount(fp);
 	//paragraphList->list = (sParagraph*)malloc(paragraphList->count * sizeof(sParagraph));
-	paragraphList->list = new sParagraph[paragraphList->count];
+	int count = CalcParagraphCount(fp);
+	paragraphList->Create(count);
 
 	//CreateParagraphStringList(paragraphList->list, fp);
 
@@ -70,7 +96,8 @@ inline void ParsingCSV(const char* text, sParagraphList* paragraphList)
 		//newString->Init(text, type, selectY, selectN);
 		sString* newString = new sString(text, type, selectY, selectN);
 		//AddStringToParagraph(&paragraphList->list[pNo], newString);
-		paragraphList->list[pNo].AddString(newString);
+		//paragraphList->list[pNo].AddString(newString);
+		paragraphList->AddStringToList(pNo, newString);
 	}
 
 	// 4. 파일을 닫는다. - 파일을 다시 읽을 수 없는 상태로 만든다

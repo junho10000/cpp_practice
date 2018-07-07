@@ -18,11 +18,22 @@ public:
 	int Print();
 };
 
-struct sParagraphList
+class sParagraphList
 {
-	int count;
-	sParagraph* list;
+private:
+	int _count;
+	sParagraph* _list;
+public:
+	sParagraphList();
+	~sParagraphList();
+
+	void Create(int count);
+	void AddStringToList(int index, sString* newString);
+	void Destroy();
+	int Print(int select);
+	int GetCount();
+
 };
 
 
-void AddParagraphToList(sParagraphList* paragraphList, sParagraph* paragraph);
+

@@ -74,11 +74,7 @@
 //	return 0;
 //}
 
-void AddParagraphToList(sParagraphList* paragraphList, sParagraph* paragraph)
-{
-	paragraphList->list[paragraphList->count] = *paragraph;
-	paragraphList->count++;
-}
+
 
 sParagraph::sParagraph()
 {
@@ -112,11 +108,8 @@ void sParagraph::AddString(sString * text)
 	else
 	{
 		// Ã¹ ¹®Àå ¾Æ´Ô
-		//paragraph->current->_next = string;
 		_current->SetNext(text);
 
-		//string->_prev = paragraph->current;
-		//string->_next = NULL;
 		text->InitNode(_current, NULL);
 		_current = text;
 	}
@@ -163,4 +156,48 @@ int sParagraph::Print()
 	}
 
 	return 0;
+}
+
+sParagraphList::sParagraphList()
+{
+	int _count = 0;
+	sParagraph* _list = NULL;
+}
+
+sParagraphList::~sParagraphList()
+{
+}
+
+void sParagraphList::Create(int count)
+{
+	_count = count;
+	_list = new sParagraph[count];
+}
+
+void sParagraphList::AddStringToList(int index, sString* newString)
+{
+	_list[index].AddString(newString);
+}
+
+void sParagraphList::Destroy()
+{
+	delete[] _list;
+}
+
+int sParagraphList::Print(int select)
+{
+	if (select < _count)
+	{
+		printf("\n");
+		return _list[select].Print();
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+int sParagraphList::GetCount()
+{
+	return _count;
 }
