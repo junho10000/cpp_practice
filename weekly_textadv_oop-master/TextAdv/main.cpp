@@ -85,7 +85,8 @@ int main(void)
 		if(select < paragraphList.count)
 		{
 			printf("\n");
-			nextSelect = PrintParagraph(&paragraphList.list[select]);
+			//nextSelect = PrintParagraph(&paragraphList.list[select]);
+			nextSelect = paragraphList.list[select].Print();
 		}
 		else
 		{
@@ -103,19 +104,7 @@ int main(void)
 
 	Save(select);
 
-	for (int i = 0; i < paragraphList.count; i++)
-	{
-		paragraphList.list[i]._current = paragraphList.list[i]._start;
-		while (NULL != paragraphList.list[i]._current)
-		{
-			//sString* nextStirng = paragraphList.list[i].current->_next;
-			sString* nextStirng = paragraphList.list[i]._current->GetNext();
-			//free(paragraphList.list[i].current);
-			delete paragraphList.list[i]._current; //∞¥√º «ÿ¡¶
-			paragraphList.list[i]._current = nextStirng;
-		}
-	}
-	free(paragraphList.list);
+	delete[] paragraphList.list;
 	
 	return 0;
 }
